@@ -7,11 +7,14 @@ import {positionRouter} from "./routers/position.router";
 import {departmentRouter} from "./routers/department.router";
 import {rabbitMQ} from "./rabbitMQ";
 import {subscribeToQueues} from "./rabbitMQ/subscribeToQueues";
+import cookieParser from "cookie-parser";
 
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
+
 const port = 3002;
 
 app.use("/employee", employeeRouter);

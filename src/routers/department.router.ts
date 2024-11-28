@@ -8,10 +8,11 @@ import {authMiddleware} from "../middlewares/auth.middleware";
 
 const router = Router();
 
+//TODO add query params to requests for clarification
 router.get("",
     authMiddleware.CheckAccessToken,
     authMiddleware.CheckRequiredRole("manager"),
-    departmentController.getDepartments);
+    departmentController.getDepartmentsWithMembers);
 
 router.post("",
     authMiddleware.CheckAccessToken,
@@ -40,11 +41,6 @@ router.patch("/:departmentId",
     commonMiddleware.isBodyValid(DepartmentValidator.updateDepartmentInfo),
     departmentController.updateDepartmentInfo)
 
-router.get("/withMembers",
-    authMiddleware.CheckAccessToken,
-    authMiddleware.CheckRequiredRole("manager"),
-    departmentController.getDepartmentsWithMembers);
-
 //TODO restrict access to only owner of department
 //TODO add validation for members
 router.patch("/:departmentId/addMembers",
@@ -53,5 +49,12 @@ router.patch("/:departmentId/addMembers",
     //commonMiddleware.isBodyValid(DepartmentValidator.addMembers),
     departmentMiddleware.FindOrThrow<IDepartment>("name"),
     departmentController.addMembersToDepartment)
+
+router.patch("/:departmentId/removeMembers",
+    authMiddleware.CheckAccessToken,
+    authMiddleware.CheckRequiredRole("manager"),
+    //commonMiddleware.isBodyValid(DepartmentValidator.removeMembers),
+    departmentMiddleware.FindOrThrow<IDepartment>("name"),
+    departmentController.removeMembersFromDepartment)
 
 export const departmentRouter = router

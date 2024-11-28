@@ -13,7 +13,8 @@ class DepartmentController {
 
     public async getDepartments(req: Request, res: Response, next: NextFunction) {
         try {
-            const departments = await departmentService.getDepartments();
+            const userId = res.locals.tokenPayload._roles.includes("admin") ?  null : res.locals.tokenPayload._id;
+            const departments = await departmentService.getDepartments(userId);
             res.status(200).json(departments);
         } catch (e) {
             next(e);
@@ -42,7 +43,8 @@ class DepartmentController {
 
     public async getDepartmentsWithMembers(req: Request, res: Response, next: NextFunction) {
         try {
-            const departments = await departmentService.getDepartmentsWithMembers();
+            const userId = res.locals.tokenPayload._roles.includes("admin") ?  null : res.locals.tokenPayload._id;
+            const departments = await departmentService.getDepartmentsWithMembers(userId);
             res.status(200).json(departments);
         } catch (e) {
             next(e);
@@ -63,6 +65,16 @@ class DepartmentController {
         try {
             const {departmentId} = req.params;
             await departmentService.addMembersToDepartment(departmentId, req.body);
+            res.sendStatus(200);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public async removeMembersFromDepartment(req: Request, res: Response, next: NextFunction) {
+        try {
+            const {departmentId} = req.params;
+            await departmentService.removeMembersFromDepartment(departmentId, req.body);
             res.sendStatus(200);
         } catch (e) {
             next(e);

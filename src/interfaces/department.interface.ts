@@ -1,8 +1,8 @@
-import {Schema} from "mongoose";
+import {Schema, Types} from "mongoose";
 
 export interface IDepartment {
     _id: Schema.Types.ObjectId;
     name: string;
-    _adminUser: Schema.Types.ObjectId;
+    _adminUser: Types.ObjectId;
     members: Schema.Types.ObjectId[];
 }

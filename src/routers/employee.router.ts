@@ -11,16 +11,13 @@ const router = Router();
 router.get("",
     authMiddleware.CheckAccessToken,
     authMiddleware.CheckRequiredRole("manager"),
-    employeeController.getAllEmployees);
+    employeeController.getEmployees);
 
 router.post("",
     commonMiddleware.isBodyValid(EmployeeValidator.createEmployee),
-    employeeController.createEmployee);
-
-router.get("/search/",
     authMiddleware.CheckAccessToken,
-    authMiddleware.CheckRequiredRole("manager"),
-    employeeController.searchForEmployees);
+    authMiddleware.CheckRequiredRole("admin"),
+    employeeController.createEmployee);
 
 router.get("/:employeeId",
     authMiddleware.CheckAccessToken,
@@ -35,12 +32,5 @@ router.patch("/updateInfo/:employeeId",
     employeeMiddleware.FindAndCheckRightsToModify,
     commonMiddleware.isIdValid(["employeeId"]),
     employeeController.updateEmployeeInfo);
-
-
-/*router.delete("/:employeeId",
-    authMiddleware.CheckAccessToken,
-    authMiddleware.CheckRequiredRole("manager"),
-    commonMiddleware.isIdValid(["employeeId"]),
-    employeeController.deleteEmployee);*/
 
 export const employeeRouter = router;

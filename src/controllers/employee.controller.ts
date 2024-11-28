@@ -11,10 +11,21 @@ class EmployeeController {
         }
     }
 
-    public async getAllEmployees(req: Request, res: Response, next: NextFunction) {
+    public async getEmployees(req: Request, res: Response, next: NextFunction) {
         try {
-            const users = await employeeService.getAllEmployees();
-            res.status(200).json(users);
+            let { withDepartment, query, limit, offset } = req.query, employees;
+            console.log(limit, offset)
+            if (query){
+                query = (query as string).trim();
+                employees = await employeeService.searchForEmployees(query);
+                res.status(200).json(employees);
+            } else if ((withDepartment === "false")){
+                employees = await employeeService.getEmployeesWithoutDepartment();
+                res.status(200).json(employees);
+            } else {
+                employees = await employeeService.getAllEmployees();
+                res.status(200).json(employees);
+            }
         } catch (e) {
             next(e);
         }
@@ -50,9 +61,9 @@ class EmployeeController {
         }
     }
 
+    //TODO index fields used frequently in queries
     public async searchForEmployees(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log(req.query.query);
             const query = (req.query.query as string).trim();
             if (!query) {
                 res.status(400).json({message: "Query is required"});
@@ -60,6 +71,21 @@ class EmployeeController {
             }
             const users = await employeeService.searchForEmployees(query as string);
             res.status(200).json(users);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public async getEmployeesWithoutDepartment(req: Request, res: Response, next: NextFunction) {
+        try {
+            if ((req.query.withDepartment === "false")){
+                const users = await employeeService.getEmployeesWithoutDepartment();
+                console.log(users);
+                res.status(200).json(users);
+            }
+            else {
+                next();
+            }
         } catch (e) {
             next(e);
         }

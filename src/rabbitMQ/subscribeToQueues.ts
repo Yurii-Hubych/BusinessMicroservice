@@ -59,7 +59,7 @@ export const subscribeToQueues = async (): Promise<void> => {
         if (msg) {
             try {
                 const userIdAndRole = JSON.parse(msg.content.toString());
-                await employeeService.asignRoleToEmployee(userIdAndRole)
+                await employeeService.assignRoleToEmployee(userIdAndRole)
             }
             catch (e) {
                 console.log(e)

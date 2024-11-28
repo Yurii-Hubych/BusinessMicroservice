@@ -1,9 +1,9 @@
 import {IPosition} from "../interfaces/position.interface";
-import {positionModel} from "../models/position";
+import {positionRepository} from "../repositories/position.repository";
 
 class PositionService {
     public async createPosition(data: IPosition) {
-        return await positionModel.create(data);
+        return await positionRepository.createPosition(data);
     }
 }
 
