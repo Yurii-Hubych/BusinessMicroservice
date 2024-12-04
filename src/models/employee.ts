@@ -12,7 +12,7 @@ const employeeSchema = new Schema<IEmployee>({
     },
     surname: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     },
     _position: {
